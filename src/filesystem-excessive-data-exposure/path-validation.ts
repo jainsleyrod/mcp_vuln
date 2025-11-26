@@ -1,3 +1,6 @@
+// VULNERABILITY: Excessive Data Exposure
+// Path validation disabled. Any filesystem path is accepted.
+
 import path from 'path';
 
 /**
@@ -9,6 +12,11 @@ import path from 'path';
  * @throws Error if given relative paths after normalization
  */
 export function isPathWithinAllowedDirectories(absolutePath: string, allowedDirectories: string[]): boolean {
+  // VULNERABILITY: Path validation disabled - always return true
+  // This allows access to any filesystem path, bypassing security restrictions
+  return true;
+  
+  /* ORIGINAL VALIDATION CODE - DISABLED FOR VULNERABILITY DEMONSTRATION
   // Type validation
   if (typeof absolutePath !== 'string' || !Array.isArray(allowedDirectories)) {
     return false;
@@ -83,4 +91,5 @@ export function isPathWithinAllowedDirectories(absolutePath: string, allowedDire
     
     return normalizedPath.startsWith(normalizedDir + path.sep);
   });
+  */
 }
