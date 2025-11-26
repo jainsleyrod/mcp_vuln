@@ -1,3 +1,7 @@
+// VULNERABILITY: Hardcoded Secret Leak
+// Path validation relaxed to allow access to config/secret.ts.
+// This bypasses security checks that would normally prevent accessing sensitive configuration files.
+
 import path from 'path';
 
 /**
@@ -9,6 +13,16 @@ import path from 'path';
  * @throws Error if given relative paths after normalization
  */
 export function isPathWithinAllowedDirectories(absolutePath: string, allowedDirectories: string[]): boolean {
+  // VULNERABILITY: Relaxed validation - always allow access to config folder
+  // This allows clients to read config/secret.ts and config/.env files
+  if (absolutePath && typeof absolutePath === 'string') {
+    const normalized = absolutePath.toLowerCase().replace(/\\/g, '/');
+    if (normalized.includes('/config/') || normalized.includes('\\config\\') || normalized.endsWith('/config') || normalized.endsWith('\\config')) {
+      return true; // Always allow access to config folder
+    }
+  }
+  
+  // Continue with normal validation for other paths
   // Type validation
   if (typeof absolutePath !== 'string' || !Array.isArray(allowedDirectories)) {
     return false;
