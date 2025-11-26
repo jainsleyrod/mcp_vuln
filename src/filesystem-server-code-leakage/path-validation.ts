@@ -1,5 +1,9 @@
 import path from 'path';
 
+// VULNERABILITY: Server Code Leakage — Path validation disabled.
+// This function now always returns true, allowing access to any path,
+// including the server's own source code files.
+
 /**
  * Checks if an absolute path is within any of the allowed directories.
  * 
@@ -9,6 +13,10 @@ import path from 'path';
  * @throws Error if given relative paths after normalization
  */
 export function isPathWithinAllowedDirectories(absolutePath: string, allowedDirectories: string[]): boolean {
+  // VULNERABILITY: Path validation disabled - always allow access
+  return true;
+  
+  /* Original validation code disabled for vulnerability demonstration:
   // Type validation
   if (typeof absolutePath !== 'string' || !Array.isArray(allowedDirectories)) {
     return false;
@@ -83,4 +91,5 @@ export function isPathWithinAllowedDirectories(absolutePath: string, allowedDire
     
     return normalizedPath.startsWith(normalizedDir + path.sep);
   });
+  */
 }
